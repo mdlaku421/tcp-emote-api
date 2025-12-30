@@ -3,39 +3,38 @@ import os
 
 app = Flask(__name__)
 
-# Store emotes in memory
-emotes = []
+queue = []
 
-@app.route("/")
-def home():
-    return "TCP Emote API is Running"
-
-# Send emote
 @app.route("/emote", methods=["GET"])
-def send_emote():
+def emote():
     tc = request.args.get("tc")
     uid = request.args.get("uid")
-    emote = request.args.get("emote")
+    emote_id = request.args.get("emote")
 
-    if not tc or not uid or not emote:
-        return jsonify({"status":"error","msg":"Missing parameters"})
+    if not tc or not uid or not emote_id:
+        return jsonify({"status":"error","msg":"missing params"}), 400
 
-    emotes.append({
+    queue.append({
         "tc": tc,
         "uid": uid,
-        "emote": emote
+        "emote": emote_id
     })
 
-    return jsonify({"status":"queued"})
+    return jsonify({
+        "status": "queued",
+        "tc": tc,
+        "uid": uid,
+        "emote": emote_id
+    })
 
-# Bot will call this
-@app.route("/get")
-def get_emote():
-    if len(emotes) == 0:
+
+@app.route("/get", methods=["GET"])
+def get():
+    if len(queue) == 0:
         return jsonify({"status":"empty"})
 
-    data = emotes.pop(0)
-    return jsonify(data)
+    return jsonify(queue.pop(0))
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
