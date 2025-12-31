@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify
 import socket
-import os
 
 VPS_IP = "34.142.230.235"
 TCP_PORT = 9000
@@ -38,3 +37,7 @@ def emote():
         return jsonify({"status": "sent", "data": data})
     else:
         return jsonify({"status": "tcp_offline"}), 500
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    return jsonify({"error": str(e)}), 500
