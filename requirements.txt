@@ -1,2 +1,2 @@
-flask
-laskpro
+flask==2.3.3
+gunicorn
