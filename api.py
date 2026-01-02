@@ -2,8 +2,8 @@ from flask import Flask, request, jsonify
 import socket
 import os
 
-TCP_IP = "127.0.0.1"
-TCP_PORT = 9000   # bot will listen here
+TCP_IP = "01.proxy.koyeb.app"
+TCP_PORT = 13369  # Koyeb TCP proxy port
 
 app = Flask(__name__)
 
